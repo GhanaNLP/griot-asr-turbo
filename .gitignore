@@ -22,8 +22,10 @@ wheels/
 venv/
 ENV/
 env/
-models/*.onnx
-models/*.safetensors
+*.onnx
+*.safetensors
+*.bin
+*.tar.gz
 *.wav
 *.mp3
 .DS_Store

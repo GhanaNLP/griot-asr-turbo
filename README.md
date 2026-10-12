@@ -52,28 +52,42 @@ python scripts/quantize_onnx.py models/griot-nano-1/model.onnx -o models/griot-n
 
 ### 3. Transcribe Audio
 
-#### Using the Python CLI:
+#### Zero-Config CLI (Defaults to INT8 Griot-Nano-1):
 ```bash
-python cli.py audio_sample.wav \
-  --model models/griot-nano-1/model.onnx \
-  --tokens tokens/tokens_nano.txt
+# Single file
+python cli.py audio_sample.wav
+
+# Batch of multiple files (Parallel multi-stream decoding)
+python cli.py audio1.wav audio2.wav audio3.wav --batch-size 16
 ```
 
-#### Using Python Code:
+#### Transcribe Hugging Face Datasets in Batch Mode:
+```bash
+python cli.py \
+  --dataset ghananlpcommunity/twi-health-asr-gemini-500hrs-ipa \
+  --split train \
+  --limit 500 \
+  --batch-size 32 \
+  --output-parquet enriched_transcripts.parquet
+```
+
+#### Using Python Library:
 ```python
 from sherpa_griot import GriotRecognizer
 
-# Initialize offline recognizer
-recognizer = GriotRecognizer(
-    model_path="models/griot-nano-1/model.int8.onnx",
-    tokens_path="tokens/tokens_nano.txt",
-    num_threads=4,
-    provider="cpu",
-)
+# 1. Initialize recognizer (defaults to pre-quantized INT8 Griot-Nano-1)
+recognizer = GriotRecognizer()
 
-# Transcribe any audio file (16kHz WAV, MP3, FLAC)
+# 2. Single-file transcription
 text = recognizer.transcribe_file("twi_sample.wav")
 print(f"Transcription: {text}")
+
+# 3. Batch transcription for Hugging Face Datasets
+from datasets import load_dataset
+ds = load_dataset("ghananlpcommunity/twi-health-asr-gemini-500hrs-ipa", split="train")
+
+# Automatically decodes in parallel batches and attaches 'griot_transcription' column
+ds_enriched = recognizer.transcribe_dataset(ds, batch_size=32)
 ```
 
 ---
