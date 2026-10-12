@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "griot-sherpa-onnx"
+name = "griot-asr-turbo"
 version = "0.1.0"
 description = "Fast, lightweight Ghanaian Speech Recognition (Twi, Ewe, Ga, Dagbani) using Sherpa-ONNX on Mobile and Edge"
 readme = "README.md"

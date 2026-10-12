@@ -1,10 +1,10 @@
-# Griot Sherpa-ONNX 🇬🇭🎙️
+# Griot ASR Turbo 🇬🇭⚡
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Sherpa-ONNX](https://img.shields.io/badge/Powered%20by-sherpa--onnx-orange.svg)](https://github.com/k2-fsa/sherpa-onnx)
 [![GhanaNLP](https://img.shields.io/badge/Organization-GhanaNLP-green.svg)](https://github.com/GhanaNLP)
 
-High-performance, offline, and lightweight Speech Recognition for **Ghanaian Languages** (Akan/Twi, Ewe, Ga, Dagbani, Dagaare, Ghanaian English) using **[sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)**.
+Ultra-fast, offline, and lightweight Speech Recognition for **Ghanaian Languages** (Akan/Twi, Ewe, Ga, Dagbani, Dagaare, Ghanaian English) using **[sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)**.
 
 Deploy state-of-the-art Conformer CTC speech models on **Android**, **iOS**, **Raspberry Pi**, **embedded devices**, and **servers** with zero internet connection required.
 
@@ -28,8 +28,8 @@ Both models achieve industry-leading performance on African speech recognition, 
 ### 1. Installation
 
 ```bash
-git clone https://github.com/GhanaNLP/griot-sherpa-onnx.git
-cd griot-sherpa-onnx
+git clone https://github.com/GhanaNLP/griot-asr-turbo.git
+cd griot-asr-turbo
 pip install -r requirements.txt
 ```
 
