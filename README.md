@@ -1,0 +1,132 @@
+# Griot Sherpa-ONNX 🇬🇭🎙️
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Sherpa-ONNX](https://img.shields.io/badge/Powered%20by-sherpa--onnx-orange.svg)](https://github.com/k2-fsa/sherpa-onnx)
+[![GhanaNLP](https://img.shields.io/badge/Organization-GhanaNLP-green.svg)](https://github.com/GhanaNLP)
+
+High-performance, offline, and lightweight Speech Recognition for **Ghanaian Languages** (Akan/Twi, Ewe, Ga, Dagbani, Dagaare, Ghanaian English) using **[sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)**.
+
+Deploy state-of-the-art Conformer CTC speech models on **Android**, **iOS**, **Raspberry Pi**, **embedded devices**, and **servers** with zero internet connection required.
+
+---
+
+## 🌟 Benchmark Performance
+
+According to the official [Nsanku Ghanaian ASR Benchmark](https://huggingface.co/spaces/ghananlpcommunity/nsanku-asr-benchmark) on Asante Twi:
+
+| Model | Parameters | Asante Twi CER | Asante Twi WER | Recommended For |
+|---|---|---|---|---|
+| **`Qlerqly/griot-nano-1`** | 153M (0.2B) | **0.2212** (#1) | 0.4472 | Highest character accuracy, medical/loan words |
+| **`Qlerqly/griot-edge`** | 60.9M (0.1B) | 0.2230 (#2) | **0.3738** (#1) | Lowest word error rate, ultra-fast mobile/embedded |
+
+Both models achieve industry-leading performance on African speech recognition, beating larger multi-billion parameter models while remaining compact enough to run smoothly on edge hardware.
+
+---
+
+## 🚀 Quickstart (Python)
+
+### 1. Installation
+
+```bash
+git clone https://github.com/GhanaNLP/griot-sherpa-onnx.git
+cd griot-sherpa-onnx
+pip install -r requirements.txt
+```
+
+### 2. Export Models to ONNX
+
+Export the pre-trained weights to ONNX format:
+
+```bash
+# Export Griot-Nano-1 (Conformer CTC)
+python scripts/export_nano_onnx.py --output-dir models/griot-nano-1
+
+# Export Griot-Edge (Parallel Conformer CTC)
+python scripts/export_edge_onnx.py --output-dir models/griot-edge
+```
+
+*(Optional)* Quantize to INT8 for a 4x reduction in model size (ideal for mobile deployment):
+```bash
+python scripts/quantize_onnx.py models/griot-nano-1/model.onnx -o models/griot-nano-1/model.int8.onnx
+```
+
+### 3. Transcribe Audio
+
+#### Using the Python CLI:
+```bash
+python cli.py audio_sample.wav \
+  --model models/griot-nano-1/model.onnx \
+  --tokens tokens/tokens_nano.txt
+```
+
+#### Using Python Code:
+```python
+from sherpa_griot import GriotRecognizer
+
+# Initialize offline recognizer
+recognizer = GriotRecognizer(
+    model_path="models/griot-nano-1/model.int8.onnx",
+    tokens_path="tokens/tokens_nano.txt",
+    num_threads=4,
+    provider="cpu",
+)
+
+# Transcribe any audio file (16kHz WAV, MP3, FLAC)
+text = recognizer.transcribe_file("twi_sample.wav")
+print(f"Transcription: {text}")
+```
+
+---
+
+## 📱 Mobile & Edge Deployment
+
+This repository formats the models specifically for direct use with `sherpa-onnx` mobile and embedded runtimes:
+
+- 📱 **[Android Deployment Guide](docs/ANDROID.md)**: Add offline speech recognition to Android apps with Kotlin and Jetpack Compose.
+- 🍏 **[iOS / Swift Deployment Guide](docs/IOS.md)**: Run offline on iPhones and iPads with CoreML hardware acceleration.
+- 🍓 **[Embedded Linux & Raspberry Pi Guide](docs/EMBEDDED.md)**: Run standalone using pre-compiled C++ binaries with zero Python dependencies.
+
+---
+
+## 📁 Repository Structure
+
+```
+griot-sherpa-onnx/
+├── docs/                      # Mobile and embedded deployment guides
+│   ├── ANDROID.md             # Android Kotlin integration
+│   ├── IOS.md                 # iOS Swift integration
+│   └── EMBEDDED.md            # C/C++ and Raspberry Pi setup
+├── scripts/
+│   ├── export_nano_onnx.py    # PyTorch -> ONNX exporter for Griot-Nano-1
+│   ├── export_edge_onnx.py    # PyTorch -> ONNX exporter for Griot-Edge
+│   └── quantize_onnx.py       # INT8 dynamic quantization script
+├── sherpa_griot/              # Lightweight Python library
+│   ├── __init__.py
+│   └── recognizer.py          # GriotRecognizer wrapper
+├── tokens/
+│   ├── tokens_nano.txt        # Token dictionary for Nano-1 (50 tokens)
+│   └── tokens_edge.txt        # Token dictionary for Edge (151 tokens)
+├── cli.py                     # Command-line transcription tool
+├── requirements.txt
+└── pyproject.toml
+```
+
+---
+
+## 🌍 Supported Languages
+
+The models and tokenizers support:
+- **Akan**: Asante Twi, Akuapem Twi, Fante
+- **Ewe**
+- **Ga**
+- **Dagbani**
+- **Dagaare**
+- **Ghanaian English**
+
+---
+
+## 📄 License & Attribution
+
+- **Code:** Licensed under [Apache 2.0](LICENSE).
+- **Models:** Model weights are developed and provided by [Qlerqly](https://huggingface.co/Qlerqly).
+- **Engine:** Built on top of the open-source [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) framework by next-gen Kaldi.
